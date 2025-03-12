@@ -9,7 +9,7 @@ urls = []
 
 if not os.path.exists('htmls'):
     os.makedirs('htmls')
-while url_count < 5:
+while url_count < 100:
     article_index -= 1
     url = f"https://habr.com/ru/articles/{article_index}"
     response = requests.get(url)
