@@ -16,10 +16,10 @@ while url_count < 100:
     if response.status_code != 200:
         sleep(0.5)
         continue
-    url_count += 1
     html = response.text
     with open(f'htmls/{url_count}.html', 'w', encoding='utf-8') as f:
         f.writelines(html)
+    url_count += 1
     urls.append(url)
     sleep(0.5)
 with open('index.txt', 'w', encoding='utf-8') as f:
