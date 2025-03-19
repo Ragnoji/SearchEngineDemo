@@ -1,3 +1,6 @@
 htmls
-*.txt
+lemmas
+tokens
 *.rar
+index.txt
+inverted_index.txt
