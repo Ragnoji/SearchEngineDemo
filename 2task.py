@@ -17,7 +17,7 @@ def parse_html(file_id):
     for script in soup(["script", "style"]):
         script.extract()    # rip it out
     # get text
-    text = soup.get_text()
+    text = soup.get_text(separator=" ")
     lines = (line.strip() for line in text.splitlines())
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
     words = ' '.join(chunks).split()
