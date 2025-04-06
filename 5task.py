@@ -73,6 +73,8 @@ def parse_query(text):
 
     for k, v in lemma_counts[-1].items():
         doc_lemma_counts[k] -= v
+        if doc_lemma_counts[k] == 0:
+            del doc_lemma_counts[k]
     del lemma_counts[-1]
     return relevant
 
