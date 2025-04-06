@@ -1,0 +1,25 @@
+   <!DOCTYPE html>
+   <html lang="ru">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Поисковая система</title>
+       <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   </head>
+   <body>
+       <h1>Поисковая система</h1>
+       <form method="POST" action="/search">
+           <input type="text" name="query" placeholder="Введите запрос...">
+           <input type="submit" value="Поиск">
+       </form>
+       {% if results %}
+           <h2>Результаты:</h2>
+           <ul>
+               {% for path, filename in results %}
+                   <li><a href="{{ path }}">{{ filename }}</a></li>
+               {% endfor %}
+           </ul>
+       {% endif %}
+   </body>
+   </html>
+

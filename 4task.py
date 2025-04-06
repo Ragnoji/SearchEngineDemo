@@ -51,13 +51,10 @@ def process_files():
 
     idf_terms = compute_idf(doc_term_counts, num_docs)
     idf_lemmas = compute_idf(doc_lemma_counts, num_docs)
-    vectors = []
 
     for i in range(num_docs):
         token_output_file = os.path.join(output_tokens_dir, f"page_{i}_tfidf.txt")
         lemma_output_file = os.path.join(output_lemmas_dir, f"page_{i}_tfidf.txt")
-
-        curr_vector = []
 
         with open(token_output_file, "w", encoding="utf-8") as f:
             for term, tf in term_frequencies.get(i, {}).items():
@@ -67,10 +64,8 @@ def process_files():
         with open(lemma_output_file, "w", encoding="utf-8") as f:
             for lemma, tf in lemma_frequencies.get(i, {}).items():
                 tfidf = tf * idf_lemmas[lemma]
-                curr_vector.append(tfidf)
                 f.write(f"{lemma} {idf_lemmas[lemma]:.6f} {tfidf:.6f}\n")
-        vectors.append(curr_vector)
-    return vectors, lemma_counts, doc_lemma_counts
+    return lemma_counts, doc_lemma_counts
 
 if __name__ == "__main__":
     process_files()
