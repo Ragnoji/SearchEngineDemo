@@ -2,6 +2,8 @@ import os
 import math
 from collections import Counter
 
+gather_counts = __import__('2task').gather_counts
+
 def read_tokens(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return [line.strip() for line in f]
@@ -33,27 +35,19 @@ def process_files():
     doc_lemma_counts = Counter()
     term_frequencies = {}
     lemma_frequencies = {}
+    token_counts, lemma_counts = gather_counts()
 
     for i in range(num_docs):
-        token_file = os.path.join(tokens_dir, f"tokens{i}.txt")
-        lemma_file = os.path.join(lemmas_dir, f"lemmas{i}.txt")
+        doc_term_counts.update(token_counts[i])
+        doc_lemma_counts.update(lemma_counts[i])
 
-        tokens = read_tokens(token_file)
-        lemmas = read_lemmas(lemma_file)
-
-        token_counts = Counter(tokens)
-        lemma_counts = Counter(lemmas)
-
-        doc_term_counts.update(token_counts.keys())
-        doc_lemma_counts.update(lemma_counts.keys())
-
-        total_terms = sum(token_counts.values())
-        total_lemmas = sum(lemma_counts.values())
+        total_terms = sum(token_counts[i].values())
+        total_lemmas = sum(lemma_counts[i].values())
 
         if total_terms > 0:
-            term_frequencies[i] = compute_tf(token_counts, total_terms)
+            term_frequencies[i] = compute_tf(token_counts[i], total_terms)
         if total_lemmas > 0:
-            lemma_frequencies[i] = compute_tf(lemma_counts, total_lemmas)
+            lemma_frequencies[i] = compute_tf(lemma_counts[i], total_lemmas)
 
     idf_terms = compute_idf(doc_term_counts, num_docs)
     idf_lemmas = compute_idf(doc_lemma_counts, num_docs)
@@ -76,7 +70,7 @@ def process_files():
                 curr_vector.append(tfidf)
                 f.write(f"{lemma} {idf_lemmas[lemma]:.6f} {tfidf:.6f}\n")
         vectors.append(curr_vector)
-    return vectors
+    return vectors, lemma_counts, doc_lemma_counts
 
 if __name__ == "__main__":
     process_files()

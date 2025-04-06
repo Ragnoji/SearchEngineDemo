@@ -25,6 +25,8 @@ def parse_html(file_id):
     morph = pymorphy3.MorphAnalyzer()
     tokens = set()
     lemmas = defaultdict(set)
+    token_counts = defaultdict(int)
+    lemma_counts = defaultdict(int)
     for w in words:
         skip_flag = False
         w = w.lower()
@@ -42,12 +44,28 @@ def parse_html(file_id):
 
         tokens.add(w)
         lemmas[parsed.normal_form].add(w)
+        token_counts[w] += 1
+        lemma_counts[parsed.normal_form] += 1
 
     with open(f'tokens/tokens{file_id}.txt', 'w', encoding='utf-8') as file:
         file.write('\n'.join(tokens))
 
     with open(f'lemmas/lemmas{file_id}.txt', 'w', encoding='utf-8') as file:
         file.writelines([f'{p[0]} {" ".join(p[1])}\n' for p in lemmas.items()])
+    return token_counts, lemma_counts
+
+
+def gather_counts():
+    with open('index.txt', 'r') as f:
+        file_ids = [line.split()[0] for line in f.readlines()]
+
+    token_counts = []
+    lemma_counts = []
+    for f_id in file_ids:
+        t, l = parse_html(f_id)
+        token_counts.append(t)
+        lemma_counts.append(l)
+    return token_counts, lemma_counts
 
 
 if __name__ == '__main__':
